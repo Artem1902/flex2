@@ -1,0 +1,17 @@
+[
+  { "id": "inv001", "name": "Polyethylene", "quantity": 500 },
+  { "id": "inv002", "name": "Metal Bolts", "quantity": 1000 },
+  { "id": "inv003", "name": "Rubber Seal", "quantity": 300 },
+  { "id": "inv004", "name": "Stainless Steel", "quantity": 800 },
+  { "id": "inv005", "name": "Plastic Cap", "quantity": 400 },
+  { "id": "inv006", "name": "Foam Gasket", "quantity": 200 },
+  { "id": "inv007", "name": "Aluminum Frame", "quantity": 150 },
+  { "id": "inv008", "name": "Nylon Washer", "quantity": 500 },
+  { "id": "inv009", "name": "PVC Pipe", "quantity": 600 },
+  { "id": "inv010", "name": "Galvanized Screws", "quantity": 1200 },
+  { "id": "inv011", "name": "Rubber Feet", "quantity": 250 },
+  { "id": "inv012", "name": "Adhesive Sealant", "quantity": 100 },
+  { "id": "inv013", "name": "Brass Nozzle", "quantity": 50 },
+  { "id": "inv014", "name": "Insulation Pad", "quantity": 180 },
+  { "id": "inv015", "name": "Mounting Bracket", "quantity": 300 }
+]

@@ -1,0 +1,184 @@
+[
+  {
+    "id": "prod001",
+    "name": "Agri-Hopper",
+    "price": 100,
+    "materials": [
+      {
+        "name": "Polyethylene",
+        "quantity": 5
+      },
+      {
+        "name": "Metal Bolts",
+        "quantity": 10
+      },
+      {
+        "name": "Rubber Seal",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "prod002",
+    "name": "Cyclone Dust Collector",
+    "price": 120,
+    "materials": [
+      {
+        "name": "Polypropylene",
+        "quantity": 6
+      },
+      {
+        "name": "Steel Frame",
+        "quantity": 1
+      },
+      {
+        "name": "Screws",
+        "quantity": 12
+      }
+    ]
+  },
+  {
+    "id": "prod003",
+    "name": "Conical Tank",
+    "price": 150,
+    "materials": [
+      {
+        "name": "HDPE",
+        "quantity": 8
+      },
+      {
+        "name": "Tank Fittings",
+        "quantity": 4
+      },
+      {
+        "name": "Gasket",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "prod004",
+    "name": "Bulk Container",
+    "price": 170,
+    "materials": [
+      {
+        "name": "LDPE",
+        "quantity": 10
+      },
+      {
+        "name": "Metal Hinges",
+        "quantity": 2
+      },
+      {
+        "name": "Fastening Straps",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "id": "prod005",
+    "name": "Feed Bin",
+    "price": 160,
+    "materials": [
+      {
+        "name": "Polyethylene",
+        "quantity": 7
+      },
+      {
+        "name": "Clamp Rings",
+        "quantity": 2
+      },
+      {
+        "name": "Rubber Seal",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "prod006",
+    "name": "Dust Cap",
+    "price": 10,
+    "materials": [
+      {
+        "name": "ABS Plastic",
+        "quantity": 2
+      },
+      {
+        "name": "Clamping Band",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "prod007",
+    "name": "Storage Hopper",
+    "price": 50,
+    "materials": [
+      {
+        "name": "Polypropylene",
+        "quantity": 9
+      },
+      {
+        "name": "Steel Frame",
+        "quantity": 2
+      },
+      {
+        "name": "Fasteners",
+        "quantity": 15
+      }
+    ]
+  },
+  {
+    "id": "prod008",
+    "name": "Fume Hood",
+    "price": 90,
+    "materials": [
+      {
+        "name": "PVC",
+        "quantity": 4
+      },
+      {
+        "name": "Air Duct",
+        "quantity": 3
+      },
+      {
+        "name": "Metal Grid",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "id": "prod009",
+    "name": "Mixer Tank",
+    "price": 130,
+    "materials": [
+      {
+        "name": "HDPE",
+        "quantity": 12
+      },
+      {
+        "name": "Agitator Blade",
+        "quantity": 1
+      },
+      {
+        "name": "Bolts",
+        "quantity": 10
+      }
+    ]
+  },
+  {
+    "id": "prod010",
+    "name": "Plastic Pallet",
+    "price": 200,
+    "materials": [
+      {
+        "name": "Recycled Plastic",
+        "quantity": 5
+      },
+      {
+        "name": "Rubber Feet",
+        "quantity": 4
+      }
+    ]
+  }
+]
