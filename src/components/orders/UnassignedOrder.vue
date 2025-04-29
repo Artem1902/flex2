@@ -1,5 +1,4 @@
 <script setup>
-import {useRouter} from "vue-router";
 import {workersList} from "../../constants/workersList.js";
 import {computed, ref} from "vue";
 import {useOrdersStore} from "../../stores/orders.js";
@@ -48,31 +47,89 @@ async function onCancel() {
 </script>
 
 <template>
-  <div>
-    <h3>{{ localOrder.costumer }}</h3>
-    <ul>
-      <li v-for="item in localOrder.order" :key="item.id">
-        {{ item.title }} - {{ item.quantity }}
-        <select v-model="item.worker">
-          <option disabled value="">Select worker</option>
-          <option v-for="worker in workersList"
-                  :key="worker.id" :value="worker.name">
-            {{ worker.name }}
-          </option>
-        </select>
-      </li>
-    </ul>
+  <v-card class="pa-4" elevation="2">
+    <div
+        class="d-flex flex-column">
+      <!-- Имя клиента -->
+      <v-card-title class="text-h6 pa-0">
+        Customer: {{ localOrder.customer }}
+      </v-card-title>
 
-    <label for="date">Delivery date:</label>
-    <input type="date" id="date" v-model="deliveryDate" :min="minDate"/>
+      <!-- Список товаров -->
+      <v-row class="mt-2">
+        <v-col v-for="(item, index) in localOrder.order"
+               :key="index" cols="12">
+          <v-card class="pa-4" elevation="1">
+            <v-row
+                class="d-flex justify-space-between align-center">
+              <v-col cols="12" sm="9">
+                <v-card-title>{{ item.title }} -
+                  {{ item.quantity }}
+                </v-card-title>
+              </v-col>
 
-    <button :disabled="isSubmitDisabled"
-            @click="onSubmit()">Submit
-    </button>
-    <button @click='onCancel'>Cancel order</button>
-  </div>
+              <v-col cols="12" sm="3">
+                <v-select
+                    v-model="item.worker"
+                    :items="workersList"
+                    label="Select Worker"
+                    item-value="name"
+                    item-text="name"
+                    variant="outlined"
+                    dense
+                />
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+
+
+        <!--            <select v-model="item.worker">-->
+        <!--              <option disabled value="">Select worker</option>-->
+        <!--              <option v-for="worker in workersList"-->
+        <!--                      :key="worker.id" :value="worker.name">-->
+        <!--                {{ worker.name }}-->
+        <!--              </option>-->
+        <!--            </select>-->
+
+        <!-- Дата доставки -->
+
+        <v-col cols="12" sm="6">
+          <v-text-field
+              v-model="deliveryDate"
+              label="Delivery Date"
+              type="date"
+              :min="minDate"
+              variant="solo"/>
+        </v-col>
+
+
+        <!-- Кнопки отправки и отмены -->
+
+        <v-col>
+          <v-btn
+              :disabled="isSubmitDisabled"
+              @click="onSubmit()"
+              color="primary"
+              elevation="2"
+              block
+          >
+            Submit Order
+          </v-btn>
+          <v-btn
+              @click="onCancel"
+              color="error"
+              elevation="2"
+              block
+              class="mt-2"
+          >
+            Cancel Order
+          </v-btn>
+        </v-col>
+      </v-row>
+    </div>
+  </v-card>
 </template>
-
 <style scoped>
 
 </style>

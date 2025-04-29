@@ -14,7 +14,7 @@ export function useOrdersFilter() {
     const filterTitle = ref("")
     const filterCostumer = ref("")
     const selectedCostumer = ref(null)
-    const sortDirection = ref("asc") // Устанавливаем начальное направление сортировки
+    const sortDirection = ref("asc")
 
     const ordersList = computed(() => ordersStore.getItemsList ?? [])
 
@@ -45,7 +45,6 @@ export function useOrdersFilter() {
     const filteredOrders = computed(() => {
         let filtered = ordersList.value
 
-        // Применяем фильтрацию по статусу
         switch (filter.value) {
             case "assigned":
                 filtered = filtered.filter(order => order.allStatus === "assigned")
@@ -58,7 +57,6 @@ export function useOrdersFilter() {
                 break
         }
 
-        // Фильтруем по названию товара
         if (filterTitle.value) {
             filtered = filtered.filter(order =>
                 order.order.some(item =>
@@ -67,19 +65,16 @@ export function useOrdersFilter() {
             )
         }
 
-        // Фильтруем по покупателю
         if (filterCostumer.value) {
             filtered = filtered.filter(order =>
                 order.costumer.toLowerCase().includes(filterCostumer.value.toLowerCase())
             )
         }
 
-        // Фильтруем по выбранному покупателю
         if (selectedCostumer.value) {
             filtered = filtered.filter(order => order.costumer === selectedCostumer.value)
         }
 
-        // Сортировка по дате доставки
         filtered = [...filtered].sort((a, b) => {
             const dateA = a.deliveryDate ? new Date(a.deliveryDate) : null
             const dateB = b.deliveryDate ? new Date(b.deliveryDate) : null

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { reactive, computed} from 'vue'
 
 const props = defineProps({
   orders: Object,
@@ -55,41 +55,117 @@ const saveMade = (item) => {
 </script>
 
 <template>
-  <div v-for="item in filteredItems" :key="item.title" style="margin-bottom: 1em;">
-    <div>
-      <div>
-        Customer: {{ orders.costumer }}
-      </div>
-      <div>
-        {{ item.title }} - qty: {{ item.quantity }} /
-        done: {{ item.done || 0 }} /
-        left: {{ getLeft(item) }} / ({{ item.status }})
-      </div>
+  <v-card
+      v-for="item in filteredItems"
+      :key="item.id"
+      class="mb-4 pa-4"
+      elevation="2"
+  >
+    <div class="d-flex flex-column gap-2">
+      <v-card-title class="text-h6 pa-0">
+        Customer: {{ orders.customer }}
+      </v-card-title>
 
-      <button @click="showDonePopup[item.title] = true">Done</button>
+      <v-row>
+        <v-col cols="12">
+          <div class="text-subtitle-1 font-weight-medium">
+            {{ item.title }} — <span class="text-uppercase">{{ item.status }}</span>
+          </div>
+        </v-col>
+      </v-row>
 
-      <div v-if="showDonePopup[item.title]">
-        <h4>Items made today</h4>
-        <input
-            type="number"
-            v-model.number="madeToday[item.title]"
-            :min="1"
-            :max="getLeft(item)"
-        />
-        <button @click="saveMade(item)" :disabled="!isValid(item)">Save</button>
-        <button @click="showDonePopup[item.title] = false">Cancel</button>
-        <div v-if="!isValid(item)" style="color: red; font-size: 0.9em;">
-          Enter a value between 1 and {{ getLeft(item) }}
+      <v-row>
+        <v-col cols="12" sm="4">
+          <v-chip color="primary" variant="outlined" class="ma-1">
+            Ordered: {{ item.quantity }}
+          </v-chip>
+        </v-col>
+        <v-col cols="12" sm="4">
+          <v-chip color="green" variant="outlined" class="ma-1">
+            Done: {{ item.done || 0 }}
+          </v-chip>
+        </v-col>
+        <v-col cols="12" sm="4">
+          <v-chip color="orange" variant="outlined" class="ma-1">
+            Left: {{ getLeft(item) }}
+          </v-chip>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col cols="12" sm="4">
+          <span class="text-caption">Order date:</span>
+          <div class="font-weight-medium">{{ orders.orderDate }}</div>
+        </v-col>
+        <v-col cols="12" sm="4">
+          <span class="text-caption">Delivery:</span>
+          <div class="font-weight-medium">{{ orders.deliveryDate }}</div>
+        </v-col>
+        <v-col cols="12" sm="4">
+          <v-chip color="red" class="font-weight-bold">
+            {{ getDeliveryText(orders.deliveryDate) }}
+          </v-chip>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col cols="12">
+          <v-alert type="info" border="start" density="compact">
+            Status of the entire order: <strong>{{ orders.allStatus }}</strong>
+          </v-alert>
+        </v-col>
+      </v-row>
+
+      <v-row justify="center">
+        <v-col cols="12" sm="4">
+          <v-btn color="success" block @click="showDonePopup[item.title] = true">
+            Done
+          </v-btn>
+        </v-col>
+      </v-row>
+
+
+      <v-expand-transition>
+        <div v-if="showDonePopup[item.title]" class="mt-4">
+          <v-card class="pa-3" outlined>
+            <h4 class="text-subtitle-1 mb-3">Items made today</h4>
+            <v-row>
+              <v-col cols="12" sm="6">
+                <v-text-field
+                    v-model.number="madeToday[item.title]"
+                    type="number"
+                    label="Quantity"
+                    :min="1"
+                    :max="getLeft(item)"
+                    :error="!isValid(item)"
+                    :error-messages="!isValid(item) ? [`Enter a value between 1 and ${getLeft(item)}`] : []"
+                    dense
+                    variant="outlined"
+                />
+              </v-col>
+
+              <v-col cols="12" sm="6" class="d-flex align-center">
+                <v-btn
+                    color="primary"
+                    class="flex-grow-1 me-2"
+                    @click="saveMade(item)"
+                    :disabled="!isValid(item)"
+                >
+                  Save
+                </v-btn>
+                <v-btn
+                    variant="outlined"
+                    class="flex-grow-1"
+                    @click="showDonePopup[item.title] = false"
+                >
+                  Cancel
+                </v-btn>
+              </v-col>
+            </v-row>
+
+          </v-card>
         </div>
-      </div>
-
-      <div>
-        Order date: {{ orders.orderDate }} /
-        Delivery: {{ orders.deliveryDate }} /
-        <strong>{{ getDeliveryText(orders.deliveryDate) }}</strong>
-        <div>Status of the entire order: {{ orders.allStatus }}</div>
-      </div>
-      <hr />
+      </v-expand-transition>
     </div>
-  </div>
+  </v-card>
 </template>

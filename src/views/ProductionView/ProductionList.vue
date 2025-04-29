@@ -1,7 +1,7 @@
 <script setup>
-import {computed, ref} from 'vue'
-import {useOrdersStore} from '../../stores/orders.js'
-import {workersList} from '../../constants/workersList.js'
+import { ref, computed } from 'vue'
+import { useOrdersStore } from '../../stores/orders.js'
+import { workersList } from '../../constants/workersList.js'
 import ProductionItem from './ProductionItem.vue'
 
 const ordersStore = useOrdersStore()
@@ -9,8 +9,8 @@ const chosenWorker = ref(null)
 const sortDirection = ref('asc')
 
 const sortedOrders = computed(() => {
-  const orders = (ordersStore.getItemsList || []).filter(
-      order => order.allStatus === 'assigned' || order.allStatus === 'in_progress'
+  const orders = (ordersStore.getItemsList || []).filter(order =>
+      ['assigned', 'in_progress'].includes(order.allStatus)
   )
 
   return orders.sort((a, b) => {
@@ -25,23 +25,23 @@ const sortedOrders = computed(() => {
   })
 })
 
-const handleDone = async ({orderId, itemId, quantity}) => {
+const handleDone = async ({ orderId, itemId, quantity }) => {
   const order = ordersStore.getItemsList.find(o => o.id === orderId)
   if (!order) return
 
-  const updatedItems = order.order.map(i => {
-    if (i.id === itemId) {
-      const newDone = (i.done || 0) + quantity
+  const updatedItems = order.order.map(item => {
+    if (item.id === itemId) {
+      const newDone = (item.done || 0) + quantity
       return {
-        ...i,
+        ...item,
         done: newDone,
-        status: newDone === i.quantity ? 'completed' : 'in_progress'
+        status: newDone >= item.quantity ? 'completed' : 'in_progress'
       }
     }
-    return i
+    return item
   })
 
-  const allCompleted = updatedItems.every(i => i.status === 'completed')
+  const allCompleted = updatedItems.every(item => item.status === 'completed')
 
   const updatedOrder = {
     ...order,
@@ -51,48 +51,62 @@ const handleDone = async ({orderId, itemId, quantity}) => {
 
   await ordersStore.updateItem(order.id, updatedOrder)
   await ordersStore.loadItemsList()
+  if (allCompleted) {
+    await ordersStore.handleStatusChange(updatedOrder)
+  }
 }
 </script>
 
 <template>
-  <div>
-    <h1>Production List</h1>
+  <v-container class="pa-2">
+    <v-row class="mt-2">
+      <v-col cols="12" sm="8" class="h-100 d-flex align-center">
+        <v-radio-group v-model="chosenWorker" inline>
+          <v-radio :label="'All workers'" :value="null"></v-radio>
+          <v-radio
+              v-for="worker in workersList"
+              :key="worker.id"
+              :label="worker.name"
+              :value="worker.name"
+          ></v-radio>
+        </v-radio-group>
+      </v-col>
 
-    <div>
-      <input type="radio" id="all" :value="null"
-             v-model="chosenWorker"/>
-      <label for="all">All workers</label>
-    </div>
+      <v-col cols="12" sm="4"  class="h-100 d-flex align-center">
+        <v-select
+            v-model="sortDirection"
+            :items="['asc', 'desc']"
+            label="Sort by Delivery Date"
+            variant="outlined"
+            density="comfortable"
+        />
+      </v-col>
+    </v-row>
 
-    <div v-for="worker in workersList" :key="worker.id">
-      <input type="radio" :id="worker.id"
-             :value="worker.name" v-model="chosenWorker"/>
-      <label :for="worker.id">{{ worker.name }}</label>
-    </div>
+    <v-row class="mt-4">
+      <h2 class="text-h5 font-weight-bold">
+        {{ chosenWorker ? `Orders for ${chosenWorker}` : 'All orders' }}
+      </h2>
+    </v-row>
 
-    <div>
-      <label>Sort by Delivery Date:</label>
-      <select v-model="sortDirection">
-        <option value="asc">Ascending</option>
-        <option value="desc">Descending</option>
-      </select>
-    </div>
+    <v-row class="mt-4">
+      <v-col
+          v-if="sortedOrders.length"
+          cols="12"
+          v-for="order in sortedOrders"
+          :key="order.id"
+          class="mb-2"
+      >
+        <ProductionItem
+            :orders="order"
+            :chosen-worker="chosenWorker"
+            @done="handleDone"
+        />
+      </v-col>
 
-    <h2>{{
-        chosenWorker ? `Orders for ${chosenWorker}` : 'All orders'
-      }}</h2>
-    <div v-if="sortedOrders.length">
-      <production-item
-          v-for="orders in sortedOrders"
-          :key="orders.id"
-          :orders="orders"
-          :chosen-worker="chosenWorker"
-          @done="handleDone"
-      />
-    </div>
-    <div v-else>
-      No orders added yet...
-    </div>
-  </div>
+      <v-col v-else cols="12">
+        <v-alert type="info" class="mt-4">No orders added yet...</v-alert>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
-

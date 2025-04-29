@@ -3,10 +3,11 @@
 </script>
 
 <template>
-<div>
-  Error
-</div>
+  <v-alert type="error" prominent>
+    Oops! Something went wrong while loading data.
+  </v-alert>
 </template>
+
 
 <style scoped>
 

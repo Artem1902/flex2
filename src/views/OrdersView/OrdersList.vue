@@ -25,88 +25,129 @@ function resetFilters() {
 </script>
 
 <template>
-  <div>
-    <h1>Orders List</h1>
-
-    <!-- Фильтры по статусу -->
-    <div>
-      <button @click="filter = 'unassigned'">Unassigned
-        orders
-      </button>
-      <button @click="filter = 'assigned'">Assigned orders
-      </button>
-      <button @click="filter = 'completed'">Completed
-        orders
-      </button>
-      <button @click="filter = 'all'">All orders</button>
-    </div>
-
-    <!-- Поиск по названию товара -->
-    <div>
-      <label for="title">Search by Product:</label>
-      <input
-          id="title"
-          v-model="filterTitle"
-          placeholder="Enter product title"
-          type="text"
-      />
-    </div>
-
-    <!-- Поиск по имени покупателя -->
-    <div>
-      <label for="costumer">Search by Customer:</label>
-      <input
-          id="costumer"
-          v-model="filterCostumer"
-          placeholder="Enter customer"
-          type="text"
-      />
-    </div>
-
-    <!-- Выбор покупателя из списка -->
-    <div>
-      <label for="selectedCostumer">Select Customer:</label>
-      <select v-model="selectedCostumer"
-              id="selectedCostumer">
-        <option disabled >Select costumer</option>
-        <option value="">All customers</option>
-        <option
-            v-for="customer in customersList"
-            :key="customer"
-            :value="customer"
+  <v-container class="pa-2">
+    <v-row class="mt-2">
+      <v-col cols="12" sm="6" md="3">
+        <v-btn
+            @click="filter = 'unassigned'"
+            block
+            :color="filter === 'unassigned' ? 'secondary' : 'info'"
         >
-          {{ customer }}
-        </option>
-      </select>
-    </div>
+          Unassigned Orders
+        </v-btn>
+      </v-col>
+      <v-col cols="12" sm="6" md="3">
+        <v-btn
+            @click="filter = 'assigned'"
+            block
+            :color="filter === 'assigned' ? 'secondary' : 'info'"
+        >
+          Assigned Orders
+        </v-btn>
+      </v-col>
+      <v-col cols="12" sm="6" md="3">
+        <v-btn
+            @click="filter = 'completed'"
+            block
+            :color="filter === 'completed' ? 'secondary' : 'info'"
+        >
+          Completed Orders
+        </v-btn>
+      </v-col>
+      <v-col cols="12" sm="6" md="3">
+        <v-btn
+            @click="filter = 'all'"
+            block
+            :color="filter === 'all' ? 'secondary' : 'info'"
+        >
+          All Orders
+        </v-btn>
+      </v-col>
+    </v-row>
 
-    <!-- Сортировка по дате доставки -->
-    <div>
-      <label for="sortOption">Sort by Delivery Date:</label>
-      <select v-model="sortDirection">
-        <option value="asc">Sort by Delivery Date (Ascending)</option>
-        <option value="desc">Sort by Delivery Date (Descending)</option>
-      </select>
-    </div>
+    <v-row class="mt-2">
+      <v-col cols="12" sm="6" md="3"
+             class="h-100 d-flex align-center">
+        <v-text-field
+            v-model="filterTitle"
+            label="Search by Product"
+            variant="outlined"
+            density="comfortable"
+        />
+      </v-col>
 
-    <!-- Сброс -->
-    <div>
-      <button @click="resetFilters">Reset Filters</button>
-    </div>
+      <v-col cols="12" sm="6" md="3"
+             class="h-100 d-flex align-center">
+        <v-text-field
+            v-model="filterCostumer"
+            label="Search by Customer"
+            variant="outlined"
+            density="comfortable"
+        />
+      </v-col>
 
-    <!-- Список заказов -->
-    <h2>{{ filterText }}</h2>
-    <div
-        v-if="Array.isArray(filteredOrders) && filteredOrders.length">
-      <component
+      <v-col cols="12" sm="6" md="3"
+             class="h-100 d-flex align-center">
+        <v-select
+            v-model="selectedCostumer"
+            :items="customersList"
+            label="Select Customer"
+            variant="outlined"
+            density="comfortable"
+        />
+      </v-col>
+
+      <v-col cols="12" sm="6" md="2"
+             class="h-100 d-flex align-center">
+        <v-select
+            v-model="sortDirection"
+            :items="['asc', 'desc']"
+            label="Sort by Delivery Date"
+            variant="outlined"
+            density="comfortable"
+        />
+      </v-col>
+
+      <v-col cols="12" sm="6" md="1"
+             class="h-100 d-flex align-center">
+        <v-btn
+            @click="resetFilters"
+            color="warning"
+            block
+        >
+          <font-awesome-icon icon="sync"/>
+        </v-btn>
+      </v-col>
+    </v-row>
+
+    <v-row class="mt-10">
+      <h1 class="text-h5 font-weight-bold">{{
+          filterText
+        }}</h1>
+    </v-row>
+
+    <v-row class="mt-4">
+      <v-col
+          v-if="Array.isArray(filteredOrders) && filteredOrders.length"
+          cols="12"
           v-for="order in filteredOrders"
           :key="order.id"
+          class="mb-2"
+      >
+      <component
           :is="currentComponent"
           :order="order"
       />
-    </div>
-    <div v-else>
-      No orders added yet...
-    </div>
-  </div>
+      </v-col>
+      <v-col v-else cols="12">
+        <v-alert type="info" class="mt-4">No orders added
+          yet...
+        </v-alert>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
+
+<style scoped>
+</style>
+

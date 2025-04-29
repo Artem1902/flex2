@@ -76,6 +76,7 @@ export default function getStoreTemplate(collectionTitle, generalApiOperation) {
   const getCurrentItem = computed(() => currentItem.value)
 
   return {
+    itemsList,
     loadItemsList,
     addItem,
     addItemWithCustomId,

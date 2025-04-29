@@ -9,27 +9,68 @@ const props = defineProps({
 </script>
 
 <template>
-  <div>
-    <h3>Customer: {{ order.costumer }}</h3>
-    <ul>
-      <li v-for="item in order.order" :key="item.id">
-        {{ item.title }},  qty: {{ item.quantity }}, worker: {{item.worker ? item.worker :'not defined'}}, status: {{item.status}}
-      </li>
-    </ul>
-    <div>
-      Total: {{order.total}}
+  <v-card class="pa-4" elevation="2">
+    <div class="d-flex flex-column">
+
+      <!-- Имя клиента -->
+      <v-card-title class="text-h6 pa-0">
+        Customer: {{ order.customer }}
+      </v-card-title>
+
+      <!-- Список товаров -->
+      <v-row class="mt-2">
+        <v-col cols="12" v-for="item in order.order" :key="item.id">
+          <v-card class="pa-4" elevation="1">
+            <div class="text-body-1">
+              {{ item.title }}, qty: {{ item.quantity }},
+              worker: {{ item.worker ? item.worker : 'not defined' }},
+              status: {{ item.status }}
+            </div>
+          </v-card>
+        </v-col>
+
+        <!-- Total -->
+        <v-col cols="12">
+          <v-card class="pa-4" elevation="1">
+            <div class="text-body-1">
+              <strong>Total:</strong> ${{ order.total }}
+            </div>
+          </v-card>
+        </v-col>
+
+        <!-- Order date -->
+        <v-col cols="12">
+          <v-card class="pa-4" elevation="1">
+            <div class="text-body-1">
+              <strong>Order date:</strong> {{ order.orderDate }}
+            </div>
+          </v-card>
+        </v-col>
+
+        <!-- Delivery date -->
+        <v-col cols="12">
+          <v-card class="pa-4" elevation="1">
+            <div class="text-body-1">
+              <strong>Delivery date:</strong>
+              {{ order.deliveryDate ? order.deliveryDate : 'Not assigned yet' }}
+            </div>
+          </v-card>
+        </v-col>
+
+        <!-- Current status -->
+        <v-col cols="12">
+          <v-card class="pa-4" elevation="1">
+            <div class="text-body-1">
+              <strong>Current status of the entire order:</strong> {{ order.allStatus }}
+            </div>
+          </v-card>
+        </v-col>
+
+      </v-row>
     </div>
-    <div>
-      Order date: {{order.orderDate}}
-    </div>
-    <div>
-      Delivery date: {{order.deliveryDate ? order.deliveryDate : 'not assigned yet'}}
-    </div>
-    <div>
-      Сurrent status of the entire order: {{ order.allStatus }}
-    </div>
-  </div>
+  </v-card>
 </template>
+
 
 <style scoped>
 

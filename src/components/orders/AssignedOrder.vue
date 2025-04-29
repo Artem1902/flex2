@@ -1,6 +1,6 @@
 <script setup>
-import { useOrdersStore } from "../../stores/orders.js";
-import { ref } from "vue";
+import {useOrdersStore} from "../../stores/orders.js";
+import {ref} from "vue";
 
 const props = defineProps({
   order: {
@@ -20,6 +20,7 @@ const minDate = new Date().toISOString().split("T")[0]
 async function onCancel() {
   if (confirm('Are you sure you want to cancel this order?')) {
     await ordersStore.deleteItem(props.order.id)
+    // <!-- удалять с зарезервированных материалов -->
   }
 }
 
@@ -33,6 +34,7 @@ async function onComplete() {
     }))
   }
   await ordersStore.updateItem(localOrder.value.id, updatedOrder)
+  await ordersStore.handleStatusChange(updatedOrder)
   await ordersStore.loadItemsList()
 }
 
@@ -45,6 +47,7 @@ async function onSaveDeliveryDate() {
   await ordersStore.loadItemsList()
   showDeliveryPopup.value = false
 }
+
 const getDaysDiff = (deliveryDateString) => {
   const deliveryDate = new Date(deliveryDateString)
   const today = new Date()
@@ -63,35 +66,122 @@ const getDeliveryText = (deliveryDate) => {
 </script>
 
 <template>
-  <div>
-    <h3>Customer: {{ order.costumer }}</h3>
-    <ul>
-      <li v-for="item in order.order" :key="item.id">
-        {{ item.title }}, qty: {{ item.quantity }},
-        worker: {{ item.worker || 'not defined' }},
-        status: {{ item.status }}
-      </li>
-    </ul>
+  <v-card class="pa-4" elevation="2">
+    <div class="d-flex flex-column">
 
-    <div>Total: {{ order.total }}</div>
-    <div>
-      Order date: {{ order.orderDate }} /
-      Delivery: {{ order.deliveryDate }} /
-      <strong>{{ getDeliveryText(order.deliveryDate) }}</strong>
-      <div>Status of the entire order: {{ order.allStatus }}</div>
+      <!-- Имя клиента -->
+      <v-card-title class="text-h6 pa-0">
+        Customer: {{ order.customer }}
+      </v-card-title>
+
+      <!-- Список товаров -->
+      <v-row class="mt-2">
+        <v-col cols="12" v-for="item in order.order"
+               :key="item.id">
+          <v-card class="pa-4" elevation="1">
+            <v-row
+                class="d-flex justify-space-between align-center">
+              <v-col cols="12" sm="8">
+                <v-card-title class="pa-0">
+                  {{ item.title }}, qty: {{ item.quantity }}
+                </v-card-title>
+              </v-col>
+              <v-col cols="12" sm="4">
+                <div class="text-body-1">
+                  Worker: {{ item.worker || 'Not defined' }}<br/>
+                  Status: {{ item.status }}
+                </div>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+
+        <!-- Итого по заказу -->
+        <v-col cols="12">
+          <v-card class="pa-4" elevation="1">
+            <div class="text-body-1">
+              <strong>Total:</strong> ${{ order.total }}
+            </div>
+          </v-card>
+        </v-col>
+
+        <!-- Дата заказа и дата доставки -->
+        <v-col cols="12">
+          <v-card class="pa-4" elevation="1">
+            <div class="text-body-1">
+              Order date: {{ order.orderDate }}<br/>
+              Delivery: {{ order.deliveryDate }}<br/>
+              <strong>{{
+                  getDeliveryText(order.deliveryDate)
+                }}</strong><br/>
+              Status of the entire order: {{
+                order.allStatus
+              }}
+            </div>
+          </v-card>
+        </v-col>
+
+        <!-- Кнопки действий -->
+        <v-col cols="12">
+          <v-row class="d-flex align-center">
+            <v-col cols="12" sm="4">
+              <v-btn @click="onCancel" color="error" block>
+                Cancel order
+              </v-btn>
+            </v-col>
+            <v-col cols="12" sm="4">
+              <v-btn @click="showDeliveryPopup = true"
+                     color="warning" block>
+                Change delivery date
+              </v-btn>
+            </v-col>
+            <v-col cols="12" sm="4">
+              <v-btn @click="onComplete" color="success"
+                     block>
+                Complete order
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-col>
+
+
+        <!-- Popup изменения даты доставки -->
+        <v-col v-if="showDeliveryPopup" cols="12">
+          <v-card class="pa-4" elevation="1">
+            <v-card-title class="text-h6 pa-0">
+              Change Delivery Date
+            </v-card-title>
+
+            <v-text-field
+                v-model="newDeliveryDate"
+                label="New Delivery Date"
+                type="date"
+                :min="minDate"
+                variant="outlined"
+                dense
+                class="mt-2"
+            />
+
+            <div
+                class="d-flex flex-row mt-4 justify-center" style="gap: 16px;">
+              <v-btn @click="onSaveDeliveryDate"
+                     :disabled="!newDeliveryDate"
+                     color="primary">
+                Save
+              </v-btn>
+
+              <v-btn @click="showDeliveryPopup = false"
+                     color="secondary">
+                Cancel
+              </v-btn>
+            </div>
+
+          </v-card>
+        </v-col>
+
+      </v-row>
     </div>
-
-    <button @click="onCancel">Cancel order</button>
-    <button @click="showDeliveryPopup = true">Change delivery date</button>
-    <button @click="onComplete">Complete order</button>
-
-    <div v-if="showDeliveryPopup" >
-      <h4>Change Delivery Date</h4>
-      <input type="date" v-model="newDeliveryDate" :min="minDate" />
-      <button @click="onSaveDeliveryDate" :disabled="!newDeliveryDate">Save</button>
-      <button @click="showDeliveryPopup = false">Cancel</button>
-    </div>
-  </div>
+  </v-card>
 </template>
 
 <style scoped>

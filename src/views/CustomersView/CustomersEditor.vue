@@ -79,29 +79,58 @@ onMounted(async () => {
 
 <template>
   <main-layout>
-    <h1>{{ headerTitle}}</h1>
-    <form @submit="handleFormSubmit">
-      <div>
-        <label for="name">Name:</label>
-        <input type="text" v-model="name"
-               v-bind="nameAttrs"
-               id="name"
-               ref="nameRef"/>
-        <div v-if="errors.name">{{ errors.name }}</div>
-      </div>
-      <div>
-        <label for="email">Email:</label>
-        <input type="email" v-model="email"
-               v-bind="emailAttrs" id='email'/>
-        <div v-if="errors.email">{{ errors.email }}</div>
-      </div>
-      <button type="submit">{{ btnTitle }}</button>
-      <button type="button" @click="onReset">Reset Form
-      </button>
-      <button v-if="props.id" type="button"
-              @click='onDelete'>Delete
-        Customer
-      </button>
-    </form>
+    <v-container>
+      <h1 class="text-h5 font-weight-bold mt-4">{{ headerTitle }}</h1>
+
+      <v-form @submit.prevent="handleFormSubmit" class="mt-4">
+        <v-row>
+          <v-col cols="12" sm="4">
+            <v-text-field
+                v-model="name"
+                label="Name"
+                :error-messages="errors.name"
+                v-bind="nameAttrs"
+                id="name"
+                ref="nameRef"
+                variant="outlined"
+            />
+          </v-col>
+          <v-col cols="12" sm = '4'>
+            <v-text-field
+                v-model="email"
+                label="Email"
+                type="email"
+                :error-messages="errors.email"
+                v-bind="emailAttrs"
+                id="email"
+                variant="outlined"
+            />
+          </v-col>
+        </v-row>
+
+        <v-row>
+          <v-col cols="auto">
+            <v-btn type="submit" color="primary">{{ btnTitle }}</v-btn>
+          </v-col>
+
+          <v-col cols="auto">
+            <v-btn type="button" @click="onReset" color="secondary">
+              Reset Form
+            </v-btn>
+          </v-col>
+
+          <v-col cols="auto" v-if="props.id">
+            <v-btn
+                type="button"
+                @click="onDelete"
+                color="error"
+                class="ml-2"
+            >
+              Delete Customer
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-form>
+    </v-container>
   </main-layout>
 </template>

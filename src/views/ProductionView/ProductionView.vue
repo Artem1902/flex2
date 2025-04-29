@@ -5,7 +5,12 @@ import ProductionList from "./ProductionList.vue";
 
 const ordersStore = useOrdersStore()
 
-onMounted(async () => await ordersStore.loadItemsList())
+onMounted(async () => {
+      await ordersStore.loadItemsList()
+      console.log('ProductionView mounted')
+
+    }
+)
 
 </script>
 
@@ -14,6 +19,7 @@ onMounted(async () => await ordersStore.loadItemsList())
     <production-list></production-list>
   </main-layout>
 </template>
+
 
 <style scoped>
 
