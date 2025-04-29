@@ -8,19 +8,19 @@ const {
   filterTitle,
   filteredOrders,
   filterText,
-  filterCostumer,
-  selectedCostumer,
+  filterCustomer,
+  selectedCustomer,
   customersList,
   currentComponent,
   sortDirection,
 } = useOrdersFilter()
 
 function resetFilters() {
-  filter.value = 'all'
   filterTitle.value = ''
-  filterCostumer.value = ''
-  selectedCostumer.value = null
-  sortDirection.value = 'asc' // по умолчанию
+  filter.value = 'all'
+  filterCustomer.value = ''
+  selectedCustomer.value = null
+  sortDirection.value = 'asc'
 }
 </script>
 
@@ -79,7 +79,7 @@ function resetFilters() {
       <v-col cols="12" sm="6" md="3"
              class="h-100 d-flex align-center">
         <v-text-field
-            v-model="filterCostumer"
+            v-model="filterCustomer"
             label="Search by Customer"
             variant="outlined"
             density="comfortable"
@@ -89,7 +89,7 @@ function resetFilters() {
       <v-col cols="12" sm="6" md="3"
              class="h-100 d-flex align-center">
         <v-select
-            v-model="selectedCostumer"
+            v-model="selectedCustomer"
             :items="customersList"
             label="Select Customer"
             variant="outlined"

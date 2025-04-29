@@ -74,7 +74,7 @@ async function onCancel() {
                     :items="workersList"
                     label="Select Worker"
                     item-value="name"
-                    item-text="name"
+                    item-title="name"
                     variant="outlined"
                     dense
                 />

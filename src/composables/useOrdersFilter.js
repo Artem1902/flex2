@@ -12,8 +12,8 @@ export function useOrdersFilter() {
     const ordersStore = useOrdersStore()
     const filter = ref("all")
     const filterTitle = ref("")
-    const filterCostumer = ref("")
-    const selectedCostumer = ref(null)
+    const filterCustomer = ref("")
+    const selectedCustomer = ref(null)
     const sortDirection = ref("asc")
 
     const ordersList = computed(() => ordersStore.getItemsList ?? [])
@@ -37,7 +37,7 @@ export function useOrdersFilter() {
 
         const customers = new Set()
         filteredOrders.forEach(order => {
-            customers.add(order.costumer)
+            customers.add(order.customer)
         })
         return [...customers]
     })
@@ -65,14 +65,14 @@ export function useOrdersFilter() {
             )
         }
 
-        if (filterCostumer.value) {
+        if (filterCustomer.value) {
             filtered = filtered.filter(order =>
-                order.costumer.toLowerCase().includes(filterCostumer.value.toLowerCase())
+                order.customer.toLowerCase().includes(filterCustomer.value.toLowerCase())
             )
         }
 
-        if (selectedCostumer.value) {
-            filtered = filtered.filter(order => order.costumer === selectedCostumer.value)
+        if (selectedCustomer.value) {
+            filtered = filtered.filter(order => order.customer === selectedCustomer.value)
         }
 
         filtered = [...filtered].sort((a, b) => {
@@ -118,10 +118,10 @@ export function useOrdersFilter() {
     return {
         filter,
         filterTitle,
-        filterCostumer,
+        filterCustomer,
         filteredOrders,
         filterText,
-        selectedCostumer,
+        selectedCustomer,
         customersList,
         currentComponent,
         sortDirection,
